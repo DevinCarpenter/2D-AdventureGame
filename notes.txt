@@ -1,0 +1,38 @@
+//=====================================================//
+//                      CLICK EVENT
+//=====================================================//
+
+1. Get click coordinates
+2. Call player.shoot and pass in click coordinates
+3. player.shoot creates new Bullet object
+4. New 'bullet' class object with new id is added to the DOM
+4. Bullet with that id is animated toward click coordinates (rise/run * 2)
+5. Determine hit area for creature
+
+On click we get the click coordinates, we then call player.shoot and pass in the coordinates, this method creates a new bullet object,
+
+the bullet sets its coordinates to that of the player, the bullet is then animated towards the click coordinates (rise/run * 2),
+
+then determine hit area for a zombie to be hit.
+
+
+
+//=====================================================//
+//                      Zombie Create
+//=====================================================//
+
+Zombie spawns at game start, new zombies spawn at different intervals. Create new zombie object
+1. Create new zombie object
+2. Initialize zombie.move method
+3. if object (find by id) has distance < n from player(find by id), initialize zombie.bite on player.health
+
+
+
+
+
+Q: Should a method be a method if it doesnt effect the object? Or should it just be a function?
+
+My Answer: I use an object method to perform shoot because then i know that the objects are created.
+	 i dont have to find the scope of the object that is doing the shooting.
+
+Q: Should objects be declared local or global? - can't call an object in another scope that has been defined locally 
