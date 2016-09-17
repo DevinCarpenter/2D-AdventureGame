@@ -1,11 +1,4 @@
-var intval = null;
-var intval2 = null;
-var intval3 = null;
-var pos = 0;
-var pos2 = 0;
-var running = true;
-var logNum=1;
-var everyother = 0;
+"use strict";
 
 //============================================================//
 //============================================================//
@@ -18,14 +11,21 @@ var everyother = 0;
 //
 // Game Variant 1: Mario has a "ripper" bullet where he
 // activates a control to send the object flying to him,
-// ripping through all objects in its path as it soars to 
+// ripping through all objects in its path as it soars to
 // his location. Can be thrown, or not.
 //
 // Game Variant 2: Mario can shoot bullets at enemies. nuff said.
 //
-// Game Variant 3: 
+// Game Variant 3:
 //
-//objects in game: 
+//==============================================================//
+//                             About:
+// This game is written purely in JavaScript (with the exception
+// of some Jquery) and is done so to demonstrate competency in the
+// JS language.
+//	
+//
+//objects in game:
 //Player,Zombie,Bullet
 //Methods:
 //  Player: Shoot,Coords
@@ -37,14 +37,24 @@ var everyother = 0;
 // playerShoot()
 // bringBulletToPlayer()
 // getBulletCoords()
-// 
+//
 //============================================================//
 //============================================================//
 
 $(document).ready(function() {
 
 
-	
+	var intval = null;
+	var intval2 = null;
+	var intval3 = null;
+	var intval4 = null;
+	var pos = 0;
+	var pos2 = 0;
+	var running = true;
+	var logNum=1;
+	var everyother = 0;
+	var player = {};
+	var zed = {};
 	var pi= Math.PI;
 	main();
 
@@ -58,57 +68,57 @@ $(document).ready(function() {
 	// On keydown we do a check and perform actions
 	//============================//
     $(document).keydown(function(key) {
-    	
-    	//$('#mario').clearQueue();
-    	var mario_left_1 = "mario-left-1.png";
-    	var mario_left_2 = "mario-left-2.png";
-    	var mario_right_1 = "mario-right-1.png"
-    	var mario_right_2 = "mario-right-2.png";
-    	var mario_up_1 = "mario-up-1.png";
-    	var mario_up_2 = "mario-up-2.png";
-    	var mario_down_1 = "mario-down-1.png";
-    	var mario_down_2 = "mario-down-2.png";
+
+        //$('#mario').clearQueue();
+        var mario_left_1  =  "mario-left-1.png";
+        var mario_left_2  =  "mario-left-2.png";
+        var mario_right_1 =  "mario-right-1.png";
+        var mario_right_2 =  "mario-right-2.png";
+        var mario_up_1    =  "mario-up-1.png";
+        var mario_up_2    =  "mario-up-2.png";
+        var mario_down_1  =  "mario-down-1.png";
+        var mario_down_2  =  "mario-down-2.png";
         switch(parseInt(key.which,10)) {
 			// Left arrow key pressed
 			case 37:
 
-				if($('#' + player.id).attr("src") == mario_left_1){$('#' + player.id).attr("src", mario_left_2);} 
-				else if($('#' + player.id).attr("src") == mario_left_2){$('#' + player.id).attr("src", mario_left_1);} 
+				if($('#' + player.id).attr("src") === mario_left_1){$('#' + player.id).attr("src", mario_left_2);}
+				else if($('#' + player.id).attr("src") === mario_left_2){$('#' + player.id).attr("src", mario_left_1);}
 				else { $('#' + player.id).attr("src", mario_left_1);}
 				$('#' + player.id).animate({left: "-=20px"}, 10);
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 			// Up Arrow Pressed
 			case 38:
 
-				//if($('#mario').attr("src") == mario_up_1){$('#mario').attr("src", mario_up_2);} 
-				//else if($('#mario').attr("src") == mario_up_2){$('#mario').attr("src", mario_up_1);} 
+				//if($('#mario').attr("src") === mario_up_1){$('#mario').attr("src", mario_up_2);}
+				//else if($('#mario').attr("src") === mario_up_2){$('#mario').attr("src", mario_up_1);}
 				//else { $('#mario').attr("src", mario_up_1);}
 				$('#' + player.id).attr("src", mario_up_1);
 				$('#' + player.id).animate({top: "-=20px"}, 10);
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 			// Right Arrow Pressed
 			case 39:
 
-				if($('#' + player.id).attr("src") == mario_right_1){$('#' + player.id).attr("src", mario_right_2);} 
-				else if($('#' + player.id).attr("src") == mario_right_2){$('#' + player.id).attr("src", mario_right_1);} 
+				if($('#' + player.id).attr("src") === mario_right_1){$('#' + player.id).attr("src", mario_right_2);}
+				else if($('#' + player.id).attr("src") === mario_right_2){$('#' + player.id).attr("src", mario_right_1);}
 				else { $('#' + player.id).attr("src", mario_right_1);}
 				$('#' + player.id).animate({left: "+=20px"}, 10);
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 			// Down Arrow Pressed
 			case 40:
-				
-				//if($('#mario').attr("src") == mario_down_1){$('#mario').attr("src", mario_down_2);} 
-				//else if($('#mario').attr("src") == mario_down_2){$('#mario').attr("src", mario_down_1);} 
+
+				//if($('#mario').attr("src") === mario_down_1){$('#mario').attr("src", mario_down_2);}
+				//else if($('#mario').attr("src") === mario_down_2){$('#mario').attr("src", mario_down_1);}
 				//else { $('#mario').attr("src", mario_down_1);}
 				$('#' + player.id).attr("src", mario_down_1);
 				$('#' + player.id).animate({top: "+=20px"}, 10);
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 
@@ -117,46 +127,46 @@ $(document).ready(function() {
 			case 65:
 
 				$('#' + player.id).finish().clearQueue();
-				if($('#' + player.id).attr("src") == mario_left_1){$('#' + player.id).attr("src", mario_left_2);} 
-				else if($('#' + player.id).attr("src") == mario_left_2){$('#' + player.id).attr("src", mario_left_1);} 
+				if($('#' + player.id).attr("src") === mario_left_1){$('#' + player.id).attr("src", mario_left_2);}
+				else if($('#' + player.id).attr("src") === mario_left_2){$('#' + player.id).attr("src", mario_left_1);}
 				else { $('#' + player.id).attr("src", mario_left_1);}
 				player.moveleft();
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 			// W(Up) Arrow Pressed
 			case 87:
 
 				$('#' + player.id).finish().clearQueue();
-				//if($('#mario').attr("src") == mario_up_1){$('#mario').attr("src", mario_up_2);} 
-				//else if($('#mario').attr("src") == mario_up_2){$('#mario').attr("src", mario_up_1);} 
+				//if($('#mario').attr("src") === mario_up_1){$('#mario').attr("src", mario_up_2);}
+				//else if($('#mario').attr("src") === mario_up_2){$('#mario').attr("src", mario_up_1);}
 				//else { $('#mario').attr("src", mario_up_1);}
 				$('#' + player.id).attr("src", mario_up_1);
 				player.moveup();
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 			// D(Right) Arrow Pressed
 			case 68:
 
 				$('#' + player.id).finish().clearQueue();
-				if($('#' + player.id).attr("src") == mario_right_1){$('#' + player.id).attr("src", mario_right_2);} 
-				else if($('#' + player.id).attr("src") == mario_right_2){$('#' + player.id).attr("src", mario_right_1);} 
+				if($('#' + player.id).attr("src") === mario_right_1){$('#' + player.id).attr("src", mario_right_2);}
+				else if($('#' + player.id).attr("src") === mario_right_2){$('#' + player.id).attr("src", mario_right_1);}
 				else { $('#' + player.id).attr("src", mario_right_1);}
 				player.moveright();
-				$('#' + player.id).text("Last Key: " + key.which);
+				//$('#' + player.id).text("Last Key: " + key.which);
 				break;
 
 			// S(Down) Arrow Pressed
 			case 83:
 
 				$('#' + player.id).finish().clearQueue();
-				//if($('#mario').attr("src") == mario_down_1){$('#mario').attr("src", mario_down_2);} 
-				//else if($('#mario').attr("src") == mario_down_2){$('#mario').attr("src", mario_down_1);} 
+				//if($('#mario').attr("src") === mario_down_1){$('#mario').attr("src", mario_down_2);}
+				//else if($('#mario').attr("src") === mario_down_2){$('#mario').attr("src", mario_down_1);}
 				//else { $('#mario').attr("src", mario_down_1);}
 				$('#' + player.id).attr("src", mario_down_1);
 				player.movedown();
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 
@@ -164,9 +174,9 @@ $(document).ready(function() {
 			//Jump
 			case 70:
 				//$('#mario').clearQueue();
-				
+
 				$('#' + player.id).effect('bounce', {times:1}, 400);
-				$('#lastKeyPress').text("Last Key: " + key.which);
+				//$('#lastKeyPress').text("Last Key: " + key.which);
 				break;
 
 			default:
@@ -174,16 +184,18 @@ $(document).ready(function() {
 
 		}
 
-		//============================//
-		// EVENT LISTENER ON CLICK
-		// On click we create a bullet object, set it to players coords, then animate it in direction of mouse click
-		// On click we call player.shoot, this creates a new bullet object, the bullet sets its coordinates to that 
-		//============================//
-
 		
-	});
 
-	/*
+
+	});
+	
+	//============================//
+	// EVENT LISTENER ON CLICK
+	// On click we create a bullet object, set it to players coords, then animate it in direction of mouse click
+	// On click we call player.shoot, this creates a new bullet object, the bullet sets its coordinates to that
+	//============================//
+
+/*
 		$(document).click(function(e){
 			var xClickCoord = e.pageX; //mouse click x coord
 			var yClickCoord = e.pageY; //mouse click y coord
@@ -209,29 +221,36 @@ $(document).ready(function() {
 			//bullet_id.animate({left: travelX, top: travelY}, 1000,  function() {console.log("complete");});
 
 			console.log("BulletID: " + bullet.id);
-			//if( $("#" + bullet.id).is(':animated') ){console.log("1");}   
-			
+			//if( $("#" + bullet.id).is(':animated') ){console.log("1");}
+
 			//this.parentElement.removeChild(id);
 			//id.parentElement.removeChild(id);
 			//game.parentElement.removeChild(game);
 
 
 
-	
+
 			//b = [];
 			//b = travelDirection(50,a);
 			//console.log(typeof b[0]);
 			//for(var i = 0; i < 4;i++){
 			//	if(i % 2 === 0){console.log("arr["+i+"] = " + b[i]);}
 			//	else {console.log("Negative: " + b[i]);}
-				
+
 			//}
 
 		});
-	*/
+*/
+
+		//============================//
+		// EVENT LISTENER ON MOUSEDOWN
+		// On click we create a bullet object, set it to players coords, then animate it in direction of mouse click
+		// On click we call player.shoot, this creates a new bullet object, the bullet sets its coordinates to that
+		//============================//
 		$(document).mousedown(function(event) {
 		    switch (event.which) {
 		        case 1:
+		            event.preventDefault();
 		            //alert('Left Mouse button pressed.');
 		            var xClickCoord = event.pageX; //mouse click x coord
 					var yClickCoord = event.pageY; //mouse click y coord
@@ -244,16 +263,16 @@ $(document).ready(function() {
 					});
 		            break;
 		        case 2:
-		        	//Middle Mouse Button
-		        	genRandomZombie();
+		            //Middle Mouse Button
+		            genRandomZombie();
 		            break;
 		        case 3:
 		        //Right Mouse Button Pressed
-		        	document.addEventListener('contextmenu', function(e) {
-		            	//opens custom or no context menu at all
-		            	e.preventDefault();
+		            document.addEventListener('contextmenu', function(e) {
+		                //opens custom or no context menu at all
+		                e.preventDefault();
 		            }, false);
-		        	var xClickCoord = event.pageX; //mouse click x coord
+		            var xClickCoord = event.pageX; //mouse click x coord
 					var yClickCoord = event.pageY; //mouse click y coord
 		            var a = getDirection(player.xCoord,player.yCoord,xClickCoord,yClickCoord)
 					console.log("typeof a: "+typeof a);
@@ -262,9 +281,9 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            alert('You have a strange Mouse!');
-    	}
+        }
 });
-	
+
 
 
  // START GAME
@@ -281,14 +300,15 @@ var size=0;
 
 // Player Object Constructor
 function Player(name) {
-	if(typeof name === "undefined") { this.name = "bullet";}
-	else{this.name = name;}
-    this.id = PlayerID();
+	this.id = PlayerID();
+	if(typeof name !== "undefined") { this.name = name;}
+	else{this.name = "player"+this.id;}
     this.xCoord = 0;
     this.yCoord = 0;
     this.health = 100;
-	this.img = "images/mario-right-1.png";
-	$('body').append('<img class="player unselectable" id="' + this.id + '" src="' + this.img +'" />')
+	this.img = '"images/mario-right-1.png"';
+	$('body').append('<img tabIndex="-1" draggable="false" class="player unselectable" id="' + this.id + '" src="' + this.img +'" />')
+	//$('body').append('<td style="width:278px;height:174px;background-image:url('+this.img+')">')
 	//this.xCoord = $('.player').css('left').split("px");
     //this.yCoord = $('.player').css('top').split("px");
     this.xCoord = 500;
@@ -332,18 +352,18 @@ function Player(name) {
  		var sign1,sign2 = "";
  		var xValue,yValue = 0;
 		var b = travelDirection(speed,bear);
-		if(b[1] == false){sign1 = "+="}
-			else if (b[1] == true){sign1 = "-="}
-		if(b[3] == false){sign2 = "+="}
-			else if (b[3] == true){sign2 = "-="}
+		if(b[1] === false){sign1 = "+="}
+			else if (b[1] === true){sign1 = "-="}
+		if(b[3] === false){sign2 = "+="}
+			else if (b[3] === true){sign2 = "-="}
 		xValue = b[0];
 		yValue = b[2];
 		$('#' + this.id).animate({left: sign1+xValue+"px", top: sign2+yValue+"px"}, 10);
 
-		if(b[1] == false){this.xCoord += xValue;console.log("x-changePOS");}
-			else if (b[1] == true){this.xCoord -= xValue;console.log("x-changeNEG");}
-		if(b[3] == false){this.yCoord += yValue;console.log("y-changePOS");}
-			else if (b[3] == true){this.yCoord -= yValue;console.log("y-changeNEG");}
+		if(b[1] === false){this.xCoord += xValue;console.log("x-changePOS");}
+			else if (b[1] === true){this.xCoord -= xValue;console.log("x-changeNEG");}
+		if(b[3] === false){this.yCoord += yValue;console.log("y-changePOS");}
+			else if (b[3] === true){this.yCoord -= yValue;console.log("y-changeNEG");}
  	}
  	this.slide = function() {
  		$("#" + this.id).animate({left: "-=3px"}, 10);
@@ -373,7 +393,6 @@ function Player(name) {
 
 
 		$(object).addClass('active');
-		
 		$(object).attr("display", "inline");
 		// turn coords to ints
 		var xBulletCoord = xPlayerCoord;
@@ -399,7 +418,6 @@ function Player(name) {
 		//target coords
 		//var xtargetCoord = target[0];
 		//var ytargetCoord = target[1];
-		
 		var xBulletCoord = $('.bullet').css('left').split("px");
 		var yBulletCoord = $('.bullet').css('top').split("px");
 		// target is coords, animate a bullet (trail, square dot)  by calculating rise over run to the target.
@@ -408,16 +426,225 @@ function Player(name) {
  	}
 };
 
+function Sprite(id,name,img,health,speed,condition,size,x,y){
 
- // Zombie Object Constructor
- function Zombie(name,x,y,img,speed,health) {
+	this.id = id;
+	this.name = name;
+	this.img = img;
+	this.health = health;
+	this.speed = speed;
+	this.condition = condition;
+	this.size = size;
+	this.x = x;
+	this.y = y;
+	$('body').append('<img tabIndex="-1" draggable="false" class="sprite unselectable" id="' + this.id + '" src="' + this.img +'" />');
+
+};
+
+Sprite.prototype.moveToTarget = function(target){
+	var slopeX=0,slopeY=0,num=0,movementSpeed=5,deltaX=1000,deltaY=1000,
+		denominator=0,numerator=0,slope=0,distance=0,dYSign=1,dXSign=1,disBuffer=5,disSlide=3;
+	while((deltaX>100)||(deltaY>100)){
+	//intval3 = window.setInterval(function(this){
+	
+
+	// X and Y distance from player
+	//var id = Zombie.id;
+	//console.log(this.hasOwnProperty('health'));
+	//var xCoord = Zombie.coords;
+	//var yCoord = Zombie.yCoord;
+	//var name = Zombie.name;
+	//var speed = Zombie.speed;
+	//var health = Zombie.health;
+	//var img = Zombie.img;
+	console.log("name: " +this.name);
+	console.log("id: " +this.id);
+	console.log("speed: " +this.speed);
+	console.log("health: " +this.health);
+	console.log("img: " +this.img);
+	//console.log("xCoord: " +this.xCoord);
+	//
+	
+	console.log("yCoord: " +this.yCoord);
+	deltaX = target.xCoord - this.xCoord;
+	deltaY = target.yCoord - this.yCoord;
+
+	//name,x,y,img,speed,health
+
+	// Check for negative values in X & Y
+	if (deltaY < 0) {dYSign = 0;}
+	if (deltaX < 0) {dXSign = 0;}
+	//Change dx and dy to abs value, so that if theres change(neg or pos), we know
+	deltaY = Math.abs(deltaY);
+	deltaX = Math.abs(deltaX);
+
+	// Calculate distance from player
+	distance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+	// Calculate slope for advanced AI movement
+	slope = deltaY/deltaX;
+	//console.log("zombie.xCoord: "+zombie.xCoord);
+	//console.log("zombie.yCoord: "+zombie.yCoord);
+	console.log("target.xCoord: "+target.xCoord);
+	console.log("target.yCoord: "+target.yCoord);
+	console.log("Zombie.xCoord: "+this.xCoord);
+	console.log("Zombie.yCoord: "+this.yCoord);
+	console.log("deltaX: "+deltaX);
+	console.log("deltaY: "+deltaY);
+
+	// Display Data on Screen
+	//$('#playerPos').text("Player coords: "+  player.xCoord + "," + player.yCoord);
+	//$('#zomPos').text("Zombie coords: "+  zombie.xCoord + "," + zombie.yCoord);
+	//$('#distancex').text("DeltaX: "+  deltaX);
+	//$('#distancey').text("DeltaY: "+  deltaY);
+	//$('#distance').text("Total Distance: "+  Math.ceil(distance));
+	//$('#zomPos').text("Zombie coords: "+  zombie.xCoord + "," + zombie.yCoord);
+
+	//========================================================//
+	//Move Creature diagonal, left and right(Movement Method 1)
+	//========================================================//
+	/*if (distance < 60) {
+		// Slide the creature across the screen
+		zombie.slide();
+	}
+	else {
+		// Move creature towards player
+		if(deltaX >= 5) {
+			if(dXSign===1){ //pos
+				zombie.moveright();
+			}
+			else if(dXSign===0){ //neg
+				zombie.moveleft(3);
+			}
+			else{console.log("ERROR: problem with dXSign(pos/neg of dX)");}
+		}
+		if(deltaY >= 5) {
+			if(dYSign===1){ //pos
+				zombie.movedown();
+			}
+			else if(dYSign===0){ //neg
+				zombie.moveup();
+			}
+			else{console.log("ERROR: problem with dXSign(pos/neg of dX)");}
+		}
+	}*/
+
+
+	
+	//========================================================//
+	// Move Creature in a direction(Advanced Movement Method 2)
+	//========================================================//
+	if (distance < disBuffer) {
+		// Slide the creature across the screen
+		this.slide();
+	}
+	else {
+
+		// No change in y, but change in x
+		if((deltaY < disBuffer) && (deltaX >= disBuffer)){
+			denominator = movementSpeed;
+			numerator = 0;
+			// if change in X is neg, move left
+			if (dXSign === 0){
+				denominator += disSlide;
+				$('#' + this.id).animate({left: "-="+denominator+"px"}, 10);
+				this.xCoord -= denominator;
+				//console.log("MOVE: WEST");
+			}
+			// if change in X is pos, move right
+			else if (dXSign === 1){
+				$('#' + this.id).animate({left: "+="+denominator+"px"}, 10);
+				this.xCoord += denominator;
+				//console.log("MOVE: EAST");
+			}
+			else{console.log("ERROR: problem with dXSign(pos/neg of dX)");};
+		}
+
+		// No change in y, and no change in x (NOMOVE)
+		else if ((deltaY < disBuffer) && (deltaX < disBuffer)){
+			//console.log("NOMOVE: dY < 15 and dX < 15")
+		}
+
+		// Change in y, but no change in x
+		else if ((deltaY >= disBuffer) && (deltaX < disBuffer)){
+			numerator = movementSpeed;
+			denominator = 0;
+			// if change in Y is neg, move up
+			if (dYSign === 0){
+				$('#' + this.id).animate({top: "-="+numerator+"px"}, 10);
+				this.yCoord -= numerator;
+				//console.log("MOVE: NORTH");
+			}
+			// if change in Y is pos, move down
+			else if (dYSign === 1){
+				$('#' + this.id).animate({top: "+="+numerator+"px"}, 10);
+				this.yCoord += numerator;
+				//console.log("MOVE: SOUTH");
+			}
+			else{console.log("ERROR: problem with dYSign(pos/neg of dY)");};
+		}
+
+		//change in x and y is greater than movement speed, so get new movement coords based off slope
+		else{
+			//Get Numerator && Denominator
+			if (Math.abs(slope) < 1){
+	        denominator = movementSpeed;
+	        numerator = movementSpeed * slope;
+	        //console.log("SLOPE<1: denom: "+denominator);
+	        //console.log("SLOPE<1: numer: "+numerator);
+		    }
+		    else if (Math.abs(slope) >= 1){
+		        numerator = movementSpeed;
+		        denominator = movementSpeed / slope;
+		        //console.log("SLOPE>=1: denom: "+denominator);
+	        	//console.log("SLOPE>=1: numer: "+numerator);
+		    }
+		    else{console.log("ERROR: Problem with abs val of slope");}
+
+
+		    if((dYSign===1) && (dXSign===1)){
+				$('#' + this.id).animate({left: "+="+denominator+"px", top: "+="+numerator+"px"}, 10);
+				this.xCoord += denominator;
+				this.yCoord += numerator;
+				//console.log("MOVE: SE");
+			}
+			else if((dYSign===1) && (dXSign===0)){
+				denominator += disSlide
+				$('#' + this.id).animate({left: "-="+denominator+"px", top: "+="+numerator+"px"}, 10);
+				this.xCoord -= denominator;
+				this.yCoord += numerator;
+				//console.log("MOVE: SW");
+			}
+			else if((dYSign===0) && (dXSign===1)){
+				$('#' + this.id).animate({left: "+="+denominator+"px", top: "-="+numerator+"px"}, 10);
+				this.xCoord += denominator;
+				this.yCoord -= numerator;
+				//console.log("MOVE: NE");
+			}
+			else if((dYSign===0) && (dXSign===0)){
+				denominator += disSlide
+				$('#' + this.id).animate({left: "-="+denominator+"px", top: "-="+numerator+"px"}, 10);
+				this.xCoord -= denominator;
+				this.yCoord -= numerator;
+				//console.log("MOVE: NW");
+			}
+			else{console.log("ERROR: Problem with dYSign or dXSign");}
+		}
+	}
+		//========================================================//
+		// 					End Movement Method 2
+		//========================================================//
+
+    }
+};
+
+var Zombie = function(name,x,y,img,speed,health) {
 
 	this.id = ZombieID();
 	if(name !== undefined) { this.name = name;} else{this.name ="Zombie";}
 	if(health !== undefined) { this.health = health;} else{this.health = 100;}
 	if(speed !== undefined) { this.speed = speed;} else{this.speed = 5;}
 	if(img !== undefined) { this.img = img;} else{this.img = "images/zombie1.png";}
-	$('body').append('<img class="zombie unselectable" id="' + this.id + '" src="' + this.img +'" />');
+	$('body').append('<img tabIndex="-1" draggable="false" class="zombie unselectable" id="' + this.id + '" src="' + this.img +'" />');
 	if(x !== undefined){
 		this.xCoord = x;
 		$("#" + this.id).css({left: this.xCoord+'px'});
@@ -428,7 +655,7 @@ function Player(name) {
 		$("#" + this.id).css({ top: this.yCoord+'px' });
 	}
 		else {this.yCoord = $('.zombie').css('top').split("px"); console.log("undefined zombie y");}
-    
+
 
     this.coords = function() {
 
@@ -438,6 +665,8 @@ function Player(name) {
 	//this.yCoord = parseInt(this.yCoord[0] , 10 );
 	return this.xCoord + "," + this.yCoord;
  	}
+
+ 	
 
  	this.bite = function(player) {
  		player.health -= 10;
@@ -473,11 +702,28 @@ function Player(name) {
  		this.xCoord = this.xCoord - 3;
 
  	}
- };
+ 	this.AImove = function() {
+
+
+ 	}
+ 	//TODO: AIMove to get called every 30ms either here or somewhere outside of here
+
+};
+
+Zombie.prototype = Sprite.prototype;
+/*Zombie.prototype = {
+
+	this.move = function(){
+		intval3 = setInterval(function(){
+
+		}, 100);
+	}
+};*/
+
 
 // Bullet Object Constructor
 function Bullet(name,x,y) {
-	if(typeof name === "undefined") { this.name = "bullet";}
+	if(typeof name !== "undefined") { this.name = "bullet";}
 	else { this.name = name; }
 	if(this.id === undefined){this.id = BulletID();}
 	this.xCoord = x;
@@ -509,7 +755,7 @@ function main() {
 	$(document).keydown(function(e) {
 		if((e.keyCode != null) && (hasPressed === false)) {
 	        alert("Let The Game Begin!");
-	        player = new Player("SorrMario");
+	        player = new Player("SomeItalianPlumber");
 	        //console.log("player.xCoord: " + player.xCoord);
 	        //console.log("player.yCoord: " + player.yCoord);
 	        console.log("Player " + player.name + " has entered the game.");
@@ -517,43 +763,41 @@ function main() {
 	        genRandomZombie();
 			intval = window.setInterval(moveBg, 30);
 			intval2 = window.setInterval(movePlayer, 30);
-			intval3 = window.setInterval(moveZombie, 30);
 			intval4 = window.setInterval(function(){
 
 				//var array = getPlayerCoords();
 			    if (player.xCoord < 0) {
-			    	$('#gameEnd').text("You've Lost at Shitty Mario!");
-			    	//$('#mario').css({"left": "500px"});
-			    	//$('#mario').css({"top": "500px"});
-			    	confirm("You've Lost at Shitty Mario!");
-			    	location.reload();
+			        $('#gameEnd').text("You've Lost at Shitty Mario!");
+			        //$('#mario').css({"left": "500px"});
+			        //$('#mario').css({"top": "500px"});
+			        confirm("You've Lost at Shitty Mario!");
+			        location.reload();
 
-			    	
+
 			    }
 
 
 
 			},30);
-			
+
 			//console.log("Zombie Name: " + zombie.name);
 			//console.log("Zombie Health: " + zombie.health);
 			//console.log("Zombie Image: " + zombie.image);
 
 			//CreatureSpawn(zombie);
-			
-			//console.log("LOG: creature "+ zombie.name + "Left: " + $('.creature').css('left'));
+		//console.log("LOG: creature "+ zombie.name + "Left: " + $('.creature').css('left'));
 			//console.log("LOG: creature "+ zombie.name + "Top: " + $('.creature').css('top'));
 			//var zomLeft = $('.creature').css('left').split("px");
 			//var zomCoords = [];
 			//zomCoords[0] = zomLeft[0];d
 			//console.log(zomCoords[0]);
-			
+
 			hasPressed = true;
 			console.log(logNum);
 			console.log("STARTUP: Game has Started");
 			logNum++;
 
-    	}
+        }
     return false;
 
 	});
@@ -561,9 +805,14 @@ function main() {
 
 //Get the direction between two objects
 //Px and Py are the point of focus
-// P for position, D for destination 
+// P for position, D for destination
 function getDirection(Px,Py,Dx,Dy){
-	var dx=dy=dysign=dxsign=theta=radian=0;
+	var dx=0;
+	var dy=0;
+	var dysign=0;
+	var dxsign=0;
+	var theta=0;
+	var radian=0;
 
 	dx = Dx - Px;
 	dy = Dy - Py;
@@ -642,7 +891,7 @@ function travelDirection(dist, bear){
 	}
 	else if((bearing >90) && (bearing <= 180)){ //Quadrant 2
 		dy= distance * (Math.cos(bearing));
-		dx = distance * Math.sin(bearing); 
+		dx = distance * Math.sin(bearing);
 		dysign = dxsign = true;
 
 	}
@@ -663,7 +912,7 @@ function travelDirection(dist, bear){
 	}
 	dx = Math.abs(dx);
 	dy = Math.abs(dy);
-	array.push(dx,dxsign,dy,dysign); 
+	array.push(dx,dxsign,dy,dysign);
 	return array;
 
 }
@@ -671,22 +920,25 @@ function travelDirection(dist, bear){
 // generates a player ID
 function PlayerID() {
 	//this.id = ("D" + genRandom(10000)); //This works
-	return ("P" + genRandom(10000));
 	console.log("LOG: PlayerID Created");
+	return ("P" + genRandom(10000));
+
 };
 
 // generates a zombie ID
 function BulletID() {
 	//this.id = ("F" + genRandom(10000)); //This works
-	return ("B" + genRandom(10000));
 	console.log("LOG: BulletID Created");
+	return ("B" + genRandom(10000));
+
 };
 
 // generates a zombie ID
 function ZombieID() {
 	//this.id = ("F" + genRandom(10000)); //This works
-	return ("Z" + genRandom(10000));
 	console.log("LOG: ZombieID Created");
+	return ("Z" + genRandom(10000));
+
 };
 
 // Generate a number between 1 and 20
@@ -708,7 +960,10 @@ function genRandomCoords(arg) {
 };
 
 function genRandomZombie(){
-	var x=y=0;
+	var x=0;
+	var y=0;
+	var speed = 0;
+	var health = 0;
 	var width = screen.width;
 	var height = screen.height;
 
@@ -726,11 +981,11 @@ function genRandomZombie(){
 		y = genRandom(y); //anywhere Between -200y and +200 screen height);
 		y = y - (yPad/2);
 		//console.log("y-coord2: "+y);
-		
+
 	}
 	else if ((x >= 0) && (x <= width)) { // generate y that is < 0 or > height
 		//console.log("y-coord3: "+y);
-		y = genRandom(yPad); 
+		y = genRandom(yPad);
 		y = y - (yPad/2);
 		if((y - (yPad/2)) < 0){ y = y - (yPad/2); }
 		else {y = height + y;}
@@ -761,31 +1016,31 @@ function genRandomZombie(){
 			break;
 		case 3:
 			img = "images/zombie1_green_glow.jpg";
-			name="Green Glen"
+			name="Green Glen";
 			speed = 7;
 			health=75;
 			break;
 		case 4:
 			img = "images/zombie1_winter.jpg";
-			name="William The White"
+			name="William The White";
 			speed = 7;
 			health=75;
 			break;
 		case 5:
 			img = "images/zombie1_black.jpg";
-			name="Beelzebub"
+			name="Beelzebub";
 			speed = 3;
 			health=150;
 			break;
 		case 6:
 			img = "images/zombie1_dark.jpg";
-			name="Dirty Dan"
+			name="Dirty Dan";
 			speed = 3;
 			health=150;
 			break;
 		case 7:
 			img = "images/zombie1_darker.jpg";
-			name="Dark Fright"
+			name="Dark Fright";
 			speed = 3;
 			health=150;
 			break;
@@ -800,217 +1055,35 @@ function genRandomZombie(){
 
 
 	//args are: name,x-pos,y-pos,image,speed,health
-	zombie = new Zombie(name,x,y,img,speed,health);
-	document.getElementById("demo2").innerHTML = ("Zombie name: " + zombie.name + ", id: " + zombie.id
-	 + ", speed: " + zombie.speed + ", health: " + zombie.health + ", coords: " + zombie.coords());
+	zed = new Zombie(name,x,y,img,speed,health);
+	document.getElementById("demo2").innerHTML = ("Zombie name: " + zed.name + ", id: " + zed.id
+	 + ", speed: " + zed.speed + ", health: " + zed.health + ", coords: " + zed.coords());
+	zed.moveToTarget(player);
+	
 };
 
 
 
 
 
-// This is the AI that moves the zombie towards the player
-var moveZombie = function () {
-	var slopeX=0,slopeY=0,num=0,movementSpeed=5,deltaX=0,deltaY=0,
-		denominator=0,numerator=0,slope=0,distance=0,dYSign=1,dXSign=1,disBuffer=5,disSlide=3;
-	// X and Y distance from player
-	deltaX = player.xCoord - zombie.xCoord;
-	deltaY = player.yCoord - zombie.yCoord;
-
-	// Check for negative values in X & Y
-	if (deltaY < 0) {dYSign = 0;} 
-	if (deltaX < 0) {dXSign = 0;}
-
-	//Change dx and dy to abs value, so that if theres change(neg or pos), we know
-	deltaY = Math.abs(deltaY);
-	deltaX = Math.abs(deltaX);
-
-	// Calculate distance from player
-	distance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
-	// Calculate slope for advanced AI movement
-	slope = deltaY/deltaX;
-	//console.log("zombie.xCoord: "+zombie.xCoord);
-	//console.log("zombie.yCoord: "+zombie.yCoord);
-	//console.log("deltaX: "+deltaX);
-	//console.log("deltaY: "+deltaY);
-
-	// Display Data on Screen
-	//$('#playerPos').text("Player coords: "+  player.xCoord + "," + player.yCoord);
-	//$('#zomPos').text("Zombie coords: "+  zombie.xCoord + "," + zombie.yCoord);
-	//$('#distancex').text("DeltaX: "+  deltaX);
-	//$('#distancey').text("DeltaY: "+  deltaY);
-	//$('#distance').text("Total Distance: "+  Math.ceil(distance));
-	//$('#zomPos').text("Zombie coords: "+  zombie.xCoord + "," + zombie.yCoord);
-
-	//========================================================//
-	//Move Creature diagonal, left and right(Movement Method 1) 
-	//========================================================//
-	/*if (distance < 60) {
-		// Slide the creature across the screen
-		zombie.slide();
-	} 
-	else {
-		// Move creature towards player
-		if(deltaX >= 5) {
-			if(dXSign===1){ //pos
-				zombie.moveright();
-			}
-			else if(dXSign===0){ //neg
-				zombie.moveleft(3);
-			}
-			else{console.log("ERROR: problem with dXSign(pos/neg of dX)");}
-		}
-		if(deltaY >= 5) {
-			if(dYSign===1){ //pos
-				zombie.movedown();
-			}
-			else if(dYSign===0){ //neg
-				zombie.moveup();
-			}
-			else{console.log("ERROR: problem with dXSign(pos/neg of dX)");}
-		}
-	}*/
+// This is the AI that moves the creature towards the target object
 
 
-
-	//========================================================//
-	// Move Creature in a direction(Advanced Movement Method 2) 
-	//========================================================//
-	if (distance < disBuffer) {
-		// Slide the creature across the screen
-		zombie.slide();
-	} 
-	else {
-
-		// No change in y, but change in x
-		if((deltaY < disBuffer) && (deltaX >= disBuffer)){ 
-			denominator = movementSpeed;
-			numerator = 0;
-			// if change in X is neg, move left
-			if (dXSign === 0){
-				denominator += disSlide;
-				$('#' + zombie.id).animate({left: "-="+denominator+"px"}, 10);
-				zombie.xCoord -= denominator;
-				//console.log("MOVE: WEST");
-			}
-			// if change in X is pos, move right
-			else if (dXSign === 1){
-				$('#' + zombie.id).animate({left: "+="+denominator+"px"}, 10);
-				zombie.xCoord += denominator;
-				//console.log("MOVE: EAST");
-			}
-			else{console.log("ERROR: problem with dXSign(pos/neg of dX)");}
-		}
-
-		// No change in y, and no change in x (NOMOVE)
-		else if ((deltaY < disBuffer) && (deltaX < disBuffer)){
-			//console.log("NOMOVE: dY < 15 and dX < 15")
-		}
-
-		// Change in y, but no change in x
-		else if ((deltaY >= disBuffer) && (deltaX < disBuffer)){
-			numerator = movementSpeed;
-			denominator = 0;
-			// if change in Y is neg, move up
-			if (dYSign === 0){
-				$('#' + zombie.id).animate({top: "-="+numerator+"px"}, 10);
-				zombie.yCoord -= numerator;
-				//console.log("MOVE: NORTH");
-			}
-			// if change in Y is pos, move down
-			else if (dYSign === 1){
-				$('#' + zombie.id).animate({top: "+="+numerator+"px"}, 10);
-				zombie.yCoord += numerator;
-				//console.log("MOVE: SOUTH");
-			}
-			else{console.log("ERROR: problem with dYSign(pos/neg of dY)");}
-		}
-
-		//change in x and y is greater than movement speed, so get new movement coords based off slope
-		else{
-			//Get Numerator && Denominator
-			if (Math.abs(slope) < 1){
-	    	denominator = movementSpeed;
-	    	numerator = movementSpeed * slope;
-	    	//console.log("SLOPE<1: denom: "+denominator);
-	    	//console.log("SLOPE<1: numer: "+numerator);
-		    }
-		    else if (Math.abs(slope) >= 1){
-		    	numerator = movementSpeed;
-		    	denominator = movementSpeed / slope;
-		    	//console.log("SLOPE>=1: denom: "+denominator);
-	    		//console.log("SLOPE>=1: numer: "+numerator);
-		    }
-		    else{console.log("ERROR: Problem with abs val of slope");}
-
-
-		    if((dYSign===1) && (dXSign===1)){
-				$('#' + zombie.id).animate({left: "+="+denominator+"px", top: "+="+numerator+"px"}, 10);
-				zombie.xCoord += denominator;
-				zombie.yCoord += numerator;
-				//console.log("MOVE: SE");
-			}
-			else if((dYSign===1) && (dXSign===0)){
-				denominator += disSlide
-				$('#' + zombie.id).animate({left: "-="+denominator+"px", top: "+="+numerator+"px"}, 10);
-				zombie.xCoord -= denominator;
-				zombie.yCoord += numerator;
-				//console.log("MOVE: SW");
-			}
-			else if((dYSign===0) && (dXSign===1)){
-				$('#' + zombie.id).animate({left: "+="+denominator+"px", top: "-="+numerator+"px"}, 10);
-				zombie.xCoord += denominator;
-				zombie.yCoord -= numerator;
-				//console.log("MOVE: NE");
-			}
-			else if((dYSign===0) && (dXSign===0)){
-				denominator += disSlide
-				$('#' + zombie.id).animate({left: "-="+denominator+"px", top: "-="+numerator+"px"}, 10);
-				zombie.xCoord -= denominator;
-				zombie.yCoord -= numerator;
-				//console.log("MOVE: NW");
-			}
-			else{console.log("ERROR: Problem with dYSign or dXSign");}
-		}
-	}
-		//========================================================//
-		// 					End Movement Method 2
-		//========================================================//
-
-};
-
-
-
-// Spawns a Creature Object
-/*function CreatureSpawn(creature){
-	var num = genOneToTwenty();
-	setTimeout(function() {
-		//var toAdd = $("input[name=message]").val();
-        //$('.creature').append('<img src="' + creature.image + '"></img>');
-        $('.creature').prepend('<img id="theImg" src="' + creature.image +'" />')
-        console.log("LOG: New " + creature.name + " has spawned");
-
-        //$('.creature').prepend('<img id="theImg" src="' + creature.image + '" />');
-	}, 1000);
-
-};*/
-
-//Function that moves the background
+//Function that moves the background leftwards
 function moveBg() {
-    
+
     pos -= 3;
-    
+
     $(".moving-background").css({backgroundPosition: (pos * 1) + "px 0px"});
-    
-    if (logNum == 1) {
-    	console.log(logNum);
-    	console.log("STARTUP: Background has started moving");
-    	logNum++;
+
+    if (logNum === 1) {
+        console.log(logNum);
+        console.log("STARTUP: Background has started moving");
+        logNum++;
     }
 };
 
-
-
+// Function that slides the player leftwards
 function movePlayer() {
 
 	pos2--;
@@ -1018,41 +1091,20 @@ function movePlayer() {
 	//$("#mario").css({backgroundPosition: (pos * 1) + "px 0px"});
     //$('#mario').css({left: (pos2 * 1) + "px"}); // This works
     //$('#mario').animate({left: "-=1px"}); // This works
-    player.slide(); //This work flawlessly!! 
-    if (logNum == 2) {
-    	console.log(logNum);
-    	console.log("STARTUP: Player has started moving");
-    	logNum++;
+    player.slide(); //This work flawlessly!!
+    if (logNum === 2) {
+        //console.log(logNum);
+        console.log("STARTUP: Player has started moving");
+        logNum++;
     }
 
     /*var array = getPlayerCoords();
     if (array[0] < 0) {
-    	$('#game').text("You've Lost at Shitty Mario!");
-    	alert("You've Lost at Shitty Mario!");
+        $('#game').text("You've Lost at Shitty Mario!");
+        alert("You've Lost at Shitty Mario!");
     }*/
 
 };
-
-//Take in a creature type to start the moving of given creature
-/*function moveCreature(creature) {
-	//If class of Object == zombie, the execute zombie move function over zombie object 
-	creature.move();
-
-	creature = creature.name;
-	console.log("Creature to start moving: " + creature));
-	switch (creature) {
-		case "zombie":
-			this.move();
-		break;
-
-		default:
-		break;
-
-
-	}
-		
-
-};*/
 
 // Takes a target parameter. Could be recieved by click or by player current position.
 // Shooter is object calling method, no need to pass it as an arg
@@ -1062,7 +1114,7 @@ function playerShoot(object,xCoord, yCoord) {
 	var xPlayerCoord = parseInt(playerArr[0],10) + 60;
 	var yPlayerCoord = parseInt(playerArr[1],10) + 100;
 	console.log(" Haix! " + PlayerCoord);
-	console.log(" Haiy! " + yPlayerCoord);d
+	console.log(" Haiy! " + yPlayerCoord);
 	//player coords
 	//var xshooterCoord = this.coords[0];
 	//var yshooterCoord = this.coords[1];
@@ -1074,7 +1126,7 @@ function playerShoot(object,xCoord, yCoord) {
 	object.coords[1] = yPlayerCoord;
 	//displays bullet on screen
 	$(object).addClass('active');
-	
+
 	$(object).attr("display", "inline");
 	// turn coords to ints
 	var xBulletCoord = xPlayerCoord;
@@ -1100,26 +1152,13 @@ function playerShoot(object,xCoord, yCoord) {
 	//target coords
 	//var xtargetCoord = target[0];
 	//var ytargetCoord = target[1];
-	
+
 	var xBulletCoord = $('.bullet').css('left').split("px");
 	var yBulletCoord = $('.bullet').css('top').split("px");
 	// target is coords, animate a bullet (trail, square dot)  by calculating rise over run to the target.
 	// try animating pixels equivalent to rise over run for smooth trail
 };
 
-/*function Bullet(){
-	// create unique bullet ID between 1 and 10000
-	var uniqueID = genRandom(10000);
-	//initialize coords, but no need to set. coords will equal coords of object shooting bullet
-	this.coords = [];
-	$('#mario').append('<div class="bullet" id="' + uniqueID + '"></div>');
-	// Want bullet to be active AFTER coords are set, not before.
-	//$bullet.addClass('active');
-	// returns the bullet Id, so it can be tracked
-	var bulletID = parseInt(uniqueID,10) + 10;
-	console.log("Bullet(" + bulletID + ") Created");
-	return bulletID;
-};*/
 
 // When called, brings the element with class .bullet to the player coords
 function bringBulletToPlayer() {
@@ -1148,51 +1187,10 @@ function bringBulletToPlayer() {
 
 };
 
-/*function getBulletCoords() {
-	//Gets the initial coords defined in CSS
-	var xBulletCoord = $('.bullet').css('left').split("px");
-	var yBulletCoord = $('.bullet').css('top').split("px");
-	// Makes the coords an int
-	xBulletCoord = parseInt(xBulletCoord,10);
-	yBulletCoord = parseInt(yBulletCoord,10);
-	var coords = [];
-	coords[0] = xBulletCoord;
-	coords[1] = yBulletCoord;
-	
-	console.log("Bullet Coords Gotten: (" + coords[0] + "," + coords[1] + ")");
-	//returns an array of ints
-	return coords;
-};*/
 
-// Creates a new Zombie object
-/*function Zombie() {
-	// health is determined by n(1-20) * 5
-	this.name = "zombie";
-	var health = genOneToTwenty();
-	this.health *= 5;
-	this.image = 'zombie1.png';
-	// Creates the bite method to be used on target
-	var bite = function (target) {
-		target.health -= 10;
-		return target.health;
-	}; 
-	
-};*/
-
-
-/*var getPlayerCoords = function() {
-	var playerLeft = $('#mario').css('left').split("px");
-	var playerTop = $('#mario').css('top').split("px");
-	var playerCoords = [];
-	playerCoords[0] = playerLeft[0];
-	playerCoords[1] = playerTop[0];
-	return playerCoords;
-};*/
-
-
-
-
-//END DOCUMENT READY
+////////////////////////////////////////////
+//             END DOCUMENT READY         //
+////////////////////////////////////////////
 });
 
 

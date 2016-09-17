@@ -9,7 +9,7 @@ body {
 .moving-background {
 
 	/*background: url("background-hills.gif"); */
-	background: transparent url("background-hills.gif") repeat scroll 0 0;   
+	background: transparent url("background-hills.gif") repeat scroll 0 0;
 	height: 100%;
 
 }
@@ -24,6 +24,8 @@ body {
     position: absolute;
     left: 500px;
     top: 500px;
+
+
     z-index: 1000;
 
 }
@@ -38,7 +40,7 @@ body {
     position: absolute;
     left: 200px;
     top: 200px;
-} 
+}
 
 .bullet {
     position: absolute;
@@ -55,6 +57,15 @@ body {
     -moz-user-select: -moz-none;
    -khtml-user-select: none;
    -webkit-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+   pointer-events: none;
+
+   -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
 .active {
@@ -64,3 +75,22 @@ body {
 #demo {
     color: #fff;
 }
+
+#menu-button {
+  background-color: rgba(255,0,0,1);
+  height: 50px;
+  width: 150px;
+  position: absolute;
+  left: 90%;
+  top: 5%;
+}
+
+#menu-button h1 {
+  text-align: center;
+  margin: 0px;
+  position: relative;
+  color: #222;
+  font-family: sans-serif;
+
+}
+
