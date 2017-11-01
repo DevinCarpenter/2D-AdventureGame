@@ -1,4 +1,4 @@
-docReady(function() {
+docReady(() => {
 // The application will create a renderer using WebGL, if possible,
 // with a fallback to a canvas render. It will also setup the ticker
 // and the root stage PIXI.Container.
@@ -17,6 +17,39 @@ docReady(function() {
 
 //Add the canvas to the HTML document
 //document.body.appendChild(renderer.view);
+
+//Variables that are initialized for use with the user Account
+var uid="", uname="";
+
+var provider = new firebase.auth.GoogleAuthProvider();
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    uid = user.uid;
+    console.log("User is in: ",user);
+    // User is signed in.
+    document.getElementById("my-account-button").innerHTML = "My Profile";
+    document.getElementById("my-account-button").removeEventListener("click",signInWithGoogle);
+    document.getElementById("my-account-button").removeEventListener("click",openUserAccount);
+    document.getElementById("my-account-button").addEventListener("click",openUserAccount);
+    document.getElementById("username-edit-container").innerHTML = `<h2>Username: ${uname}</h2>`;
+    (()=>{
+      firebase.database().ref(`users/uid/uname`).on("value", (snapshot) => {
+        uname = snapshot.val() || "Anon";
+      });
+    })();
+  } else {
+    // No user is signed in.
+    uname = "Anon";
+    document.getElementById("my-account-button").innerHTML = `<img class="google-sign-in"
+      src="resources/images/google-assets/google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png">
+      </img>`;
+    document.getElementById("my-account-button").removeEventListener("click",openUserAccount);
+    document.getElementById("my-account-button").removeEventListener("click",signInWithGoogle);
+    document.getElementById("my-account-button").addEventListener("click",signInWithGoogle);
+  }
+});
+
 
 //Create a container object called the `stage`
 // var gameStartScene = new PIXI.Container();
@@ -690,6 +723,11 @@ function hitTestRectangle(r1, r2, object1, object2) {
 function initMenuListeners(){
   document.getElementById("start-game-button").removeEventListener("click",startGame);
   document.getElementById("start-game-button").addEventListener("click",startGame);
+
+  document.getElementById("my-account-button").removeEventListener("click",openUserAccount);
+  document.getElementById("my-account-button").removeEventListener("click",signInWithGoogle);
+  document.getElementById("my-account-button").addEventListener("click",signInWithGoogle);
+
 }
 function startGame(){
   gameStopped=false;
@@ -720,6 +758,113 @@ function writeUserScore(userId, score){
   firebase.database().ref('users/' + userId + "/score/").push({
     score: score
   });
+}
+//Makes the user account modal visible and sets the listeners to close it or edit
+function openUserAccount(){
+  document.getElementById("account-modal").style.display = "block";
+  console.log("Username is ",uname);
+  document.getElementById("username-edit-container").innerHTML = `<h2>Username: ${uname}</h2>`;
+  document.getElementById("account-close-button").removeEventListener("click",closeAccountModal);
+  document.getElementById("account-close-button").addEventListener("click",closeAccountModal);
+
+  document.getElementById("account-edit-button").removeEventListener("click",editUserAccount);
+  document.getElementById("account-edit-button").addEventListener("click",editUserAccount);
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      document.getElementById("sign-out-container").style.display = "flex";
+      document.getElementById("sign-out-button").removeEventListener("click",signOutWithGoogle);
+      document.getElementById("sign-out-button").addEventListener("click",signOutWithGoogle);
+    } else {
+      // No user is signed in.
+    }
+  });
+}
+//Closes the account modal of the user
+function closeAccountModal(){
+  document.getElementById("account-modal").style.display = "none";
+}
+//Activates edit mode of the user account
+function editUserAccount(){
+  document.getElementById("username-edit-container").innerHTML = `<h2>Username: </h2>
+    <input type="text" value="1"/>`;
+  document.getElementById("account-edit-button").removeEventListener("click",editUserAccount);
+  document.getElementById("account-edit-button").addEventListener("click",editUserAccount);
+}
+//Opens a modal allowing for the user to sign in to their google account for authentication in the app
+function signInWithGoogle(){
+  firebase.auth().signInWithPopup(provider).then(function(result) {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    var token = result.credential.accessToken;
+    // The signed-in user info.
+    var user = result.user;
+    uid = user.uid;
+    console.log("Result is ",result);
+    console.log("User is ",user);
+    document.getElementById("my-account-button").innerHTML = "My Profile";
+    document.getElementById("my-account-button").removeEventListener("click",signInWithGoogle);
+    document.getElementById("my-account-button").removeEventListener("click",openUserAccount);
+    document.getElementById("my-account-button").addEventListener("click",openUserAccount);
+    // ...
+  }).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    alert("Error!");
+    console.log("ERROR: ",error);
+    switch(error.code){
+      case "auth/web-storage-unsupported":
+        document.getElementById("general-modal").style.display = "flex";
+        document.getElementById("general-modal").innerHTML = `<h1>Uh-Oh!</h1>
+          <h3>We're sorry, but it appears your cookies are disabled!
+          Please enable your browser's cookies to continue signing in.</h3>
+          <button id="close-general-modal" class="general-modal-button">Close
+              <i class="fa fa-times" aria-hidden="true"></i>
+          </button>`;
+        document.getElementById("close-general-modal").addEventListener("click",function(){
+          document.getElementById("general-modal").style.display = "none";
+        });
+        break;
+      default:
+        document.getElementById("general-modal").style.display = "flex";
+        document.getElementById("general-modal").innerHTML = `<h1>Uh-Oh!</h1>
+          <h3>We're sorry, an unexpected error has occurred! Please refresh the page and try again.</h3>
+          <button id="close-general-modal" class="general-modal-button">Close
+              <i class="fa fa-times" aria-hidden="true"></i>
+          </button>`;
+        document.getElementById("close-general-modal").addEventListener("click",function(){
+          document.getElementById("general-modal").style.display = "none";
+        });
+        break;
+    }
+  });
+}
+//Signs users out of their google account if they are signed in within the app.
+function signOutWithGoogle(){
+  firebase.auth().signOut().then(function() {
+      console.log("Sign out was succussful!");
+      document.getElementById("sign-out-container").style.display = "none";
+      document.getElementById("my-account-button").innerHTML = `<img class="google-sign-in"
+        src="resources/images/google-assets/google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png">
+        </img>`;
+      document.getElementById("my-account-button").removeEventListener("click",openUserAccount);
+      document.getElementById("my-account-button").removeEventListener("click",signInWithGoogle);
+      document.getElementById("my-account-button").addEventListener("click",signInWithGoogle);
+    // Sign-out successful.
+  }).catch(function(error) {
+    alert("An error occurred while signing out!");
+    console.log("Error: ",error);
+    // An error happened.
+  });
+}
+function updateUserData(data){
+  var updates = {};
+  updates['/users/' + uid + '/uname'] = data.uname;
+  firebase.database().ref().update(updates);
 }
 }); //End of docReady function
 

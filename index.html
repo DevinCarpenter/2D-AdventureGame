@@ -48,6 +48,9 @@
         h2{
             font-size: 3rem;
         }
+        #uname-input{
+            z-index: 1200;
+        }
         #wrapper{ /*wrapper is for the game start menu, positioned by flexbox*/
             position: absolute;
             display: flex;
@@ -83,6 +86,11 @@
             margin: 0;
             padding: 0;
             background-repeat:repeat;
+        }
+        .flexy{
+            display: flex;
+            justify-content: center;
+            align-content: center;
         }
         .title-menu-bar{
             display: flex;
@@ -187,10 +195,6 @@
             position:absolute;
             display: none;
         }
-        .account-info-container{
-
-
-        }
         .account-info-container h2{
             margin-left: 16px;
         }
@@ -227,10 +231,55 @@
         .red:hover{
             background-color: rgba(255,255,255,.5);
         }
+        #general-modal{
+            position: absolute;
+            z-index: 1000;
+            min-width: 50%;
+            min-height: 50%;
+            background-color: white;
+            color: black;
+            border-radius: 24px;
+            display: none;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            padding: 16px;
+        }
+        .general-modal-button{
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            outline:none;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .general-modal-button > .fa-times {
+            color: white;
+        }
+        .google-sign-in{
+            height: 46px;
+            width: 191px;
+        }
+        #sign-out-container{
+            display: none;
+            cursor: pointer;
+        }
+        #username-edit-container{
+            justify-content: flex-start;
+        }
+        #username-edit-container > h2{
+            margin:0;
+            margin-left: 16px;
+            margin-right: 16px;
+            position: relative;
+        }
+
     </style>
 </head>
 <body>
     <div id="wrapper">
+        <div id="general-modal"></div>
         <div id="game-start-menu">
            <!--  <div class="center-line"></div> -->
             <div class="title-menu-bar">
@@ -239,7 +288,9 @@
                 </div>
                 <div class="right-title-menu-bar">
                     <div class="account-button-wrapper">
-                        <h3 class="account-button">My Account</h3>
+                        <h3 id="my-account-button" class="account-button">
+                            <img class="google-sign-in" src="resources/images/google-assets/google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png"/>
+                        </h3>
                     </div>
                 </div>                
             </div>
@@ -256,9 +307,6 @@
                 <div class="menu-button-wrapper">
                     <button id="stats-button" class="menu-button">Stats</button>
                 </div>
-                <div class="menu-button-wrapper">
-                    <button id="register-button" class="menu-button">Register</button>
-                </div>
             </div>
             
         </div>
@@ -267,18 +315,25 @@
                 <h1>My Account</h1>
             </div>
             <div class="account-info-container">
-                <h2>Username: Anon</h2>
+                <div id="username-edit-container">
+                    <h2>Username: </h2>
+                    <input type="text" value="test" name="a" placeholder=""/>
+                </div>
                 <h2>Best Score: 0</h2>
                 <h2>Time Played: 0</h2>
             </div>
             <div class="account-modal-button-container">
-                <button class="account-modal-button">Edit
+                <button id="account-edit-button" class="account-modal-button">Edit
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                 </button>
-                <button class="account-modal-button">Close
+                <button id="account-close-button" class="account-modal-button">Close
                     <i class="fa fa-times" aria-hidden="true"></i>
                 </button>
             </div>
+            <div id="sign-out-container" class="flexy">
+                <p id="sign-out-button">Sign Out</p>
+            </div>
+            
         </div>
         <div id="game-over-scene">
             <h1>You Lost!</h1><br>
@@ -288,6 +343,8 @@
         </div>
     </div>
     <canvas id="game-canvas"></canvas>
+
+    
     
     
 </body>
