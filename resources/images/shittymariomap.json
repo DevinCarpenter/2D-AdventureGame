@@ -1,0 +1,129 @@
+{"frames": {
+
+"mario-down-1.png":
+{
+	"frame": {"x":0,"y":0,"w":120,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":159},
+	"sourceSize": {"w":120,"h":159},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"mario-left-1.png":
+{
+	"frame": {"x":120,"y":0,"w":120,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":159},
+	"sourceSize": {"w":120,"h":159},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"mario-left-2.png":
+{
+	"frame": {"x":240,"y":0,"w":132,"h":158},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":158},
+	"sourceSize": {"w":132,"h":158},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"mario-right-1.png":
+{
+	"frame": {"x":372,"y":0,"w":120,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":159},
+	"sourceSize": {"w":120,"h":159},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"mario-right-2.png":
+{
+	"frame": {"x":492,"y":0,"w":132,"h":158},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":158},
+	"sourceSize": {"w":132,"h":158},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"mario-up-1.png":
+{
+	"frame": {"x":624,"y":0,"w":120,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":159},
+	"sourceSize": {"w":120,"h":159},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1.png":
+{
+	"frame": {"x":744,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1_black.jpg":
+{
+	"frame": {"x":864,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1_dark.jpg":
+{
+	"frame": {"x":984,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1_darker.jpg":
+{
+	"frame": {"x":1104,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1_glow.jpg":
+{
+	"frame": {"x":1224,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1_green_glow.jpg":
+{
+	"frame": {"x":1344,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"zombie1_winter.jpg":
+{
+	"frame": {"x":1464,"y":0,"w":120,"h":190},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":190},
+	"sourceSize": {"w":120,"h":190},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "shittymariomap.png",
+	"format": "RGBA8888",
+	"size": {"w":1584,"h":190},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0f13d2ff9004e95b2258b76873d52227:90dd5d5397d077e753b68863aaacd5d9:b85723013a6334fe0be464716b3434c2$"
+}
+}

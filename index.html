@@ -1,34 +1,294 @@
 <!DOCTYPE html>
-
 <html>
+<head>
+    <title>New Shitty Mario!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<head>
-		<title>Shitty Mario</title>
-		<link rel='stylesheet' type='text/css' href='main.css'/>
-		<script type='text/javascript' src='jquery.js'></script>
-		<script src="jquery-ui.min.js"></script>
-		<script type='text/javascript' src='main.js'></script>
+    <link rel="stylesheet" type="text/css" href="normalize.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="animate.css">
+    <script type="text/javascript" src="docReady.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA5YBXIUsw6XZKYCVin25REd4bsaettGzs",
+        authDomain: "shitty-mario.firebaseapp.com",
+        databaseURL: "https://shitty-mario.firebaseio.com",
+        projectId: "shitty-mario",
+        storageBucket: "",
+        messagingSenderId: "412765917716"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script type="text/javascript" src="pixi.min.js"></script>
+    <!-- <script type="text/javascript" src="melonJS.js"></script> -->
 
-	</head>
+    <script type="text/javascript" src="pixi-gamefile.js"></script>
 
-	<body>
-        <div id="menu-button"><h1>Menu</h1></div>
-        <div class="moving-background">
-            <h1 class="unselectable" style="color:red;text-align: center;z-index: -1;" id="game">Shitty Mario</h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="playerPos"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="zomPos"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="distancex"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="distancey"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="distance"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="lastKeyPress"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="clickCoords"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="bulletCoords"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="demo"></h1>
-            <h1 class="unselectable" style="color:red;z-index: -1;" id="demo2"></h1>
-            <h1 class="unselectable" style="color:red;text-align: center;" id="gameEnd"></h1>
-            <!-- <img class="player" id="mario" src="mario-right-1.png"></img> -->
-            <div class="bullets unselectable"></div>
+    <style type="text/css">
+        html,body{
+            margin:0;
+            padding:0;
+            overflow:hidden;
+            height: 100vh;
+            width: 100%;
+            font-size:18px;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        * {
+            box-sizing: content-box;
+        }
+        h1{
+            font-size: 4rem;
+        }
+        h2{
+            font-size: 3rem;
+        }
+        #wrapper{ /*wrapper is for the game start menu, positioned by flexbox*/
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height:100vh;
+            width:100%;
+        }
+        #game-start-menu{
+            height:70%;
+            width:70%;
+            z-index: 100;
+            background-color: rgba(244, 66, 66, 0.9);
+            display:flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            border-radius: 24px;
+        }
+        #game-over-scene{
+            position: absolute;
+            background-color: rgba(0,0,0,.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height:70vh;
+            width:70%;
+            z-index: 500;
+            color: #fff;
+        }
+        #canvas-game{
+            margin: 0;
+            padding: 0;
+            background-repeat:repeat;
+        }
+        .title-menu-bar{
+            display: flex;
+            width: 100%;
+        }
+        .left-title-menu-bar{
+            display:flex;
+            flex: 20 1 auto;
+            justify-content: flex-end;
+            align-items: center
+            margin-right: 15px;
+            
+        }
+        .right-title-menu-bar{
+            display: flex;
+            flex: 14 1 auto;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+        .title{
+            color: white;
+            font-size: 4rem;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        .menu-button{
+            border: none;
+            background-color: black;
+            color:white;
+            display: flex;
+            flex: 2 1 auto;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 3rem;
+            cursor: pointer;
+            border-radius: 16px;
+            outline:none;
+        }
+        .menu-button:last-child{
+            margin-bottom: 20px;
+        }
+        .menu-button-wrapper{
+            display: flex;
+            justify-content: stretch;
+            align-items: stretch;
+            flex-direction: column;
+            flex: 2 1 auto;
+            width: 100%;
+        }
+        .menu-button-wrapper:hover > .menu-button{
+            background-color: rgba(255,255,255,.5);
+        }
+        .menu-button-container{
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            flex: 2 1 auto;
+            width: 50%;
+
+        }
+        .account-button{
+            display: flex;
+            margin: 0;
+            padding:8px;
+        }
+        .account-button-wrapper{
+            margin-top: 30px;
+            margin-right:30px;
+            cursor: pointer;
+        }
+        .account-button-wrapper:hover > .account-button{
+            background-color: rgba(255,255,255,.5);
+            box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+            /*margin-right: 35px;
+            margin-top: 27px;*/
+            transform: translate(-10px, -10px);
+            padding:8px;
+            border-radius: 8px;
+        }
+        
+        .center-line{
+            display: flex;
+            height: 100%;
+            width: 1px;
+            position:absolute;
+            background-color: black;
+        }
+        .score-bar{
+            display: flex;
+        }
+        .user-score{
+
+        }
+        #account-modal{
+            height: 80vh;
+            width: 50%;
+            background-color: rgba(0,0,0,.92);
+            color: white;
+            border-radius: 18px;
+            z-index: 200;
+            position:absolute;
+            display: none;
+        }
+        .account-info-container{
+
+
+        }
+        .account-info-container h2{
+            margin-left: 16px;
+        }
+        .account-title-container{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .account-modal-button-container{
+            display: flex;
+            width:75%;
+            margin:auto;
+        }
+        .account-modal-button{
+            border: none;
+            background-color: teal;
+            color:white;
+            display: flex;
+            flex: 2 1 auto;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            border-radius: 8px;
+            outline:none;
+            margin: 15px 8px 15px 8px;
+        }
+        .fa-pencil, .fa-times{
+            margin-left: 30px;
+            color: #00004d;
+        }
+        .red{
+            background-color: rgba(244, 66, 66, 0.9);
+        }
+        .red:hover{
+            background-color: rgba(255,255,255,.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="game-start-menu">
+           <!--  <div class="center-line"></div> -->
+            <div class="title-menu-bar">
+                <div class="left-title-menu-bar">
+                    <h1 class="title">Main Menu</h1>
+                </div>
+                <div class="right-title-menu-bar">
+                    <div class="account-button-wrapper">
+                        <h3 class="account-button">My Account</h3>
+                    </div>
+                </div>                
+            </div>
+            <div class="score-bar">
+                <h2 class="user-score">Best Score: 0</h2>
+            </div>
+            <div class="menu-button-container">
+                <div class="menu-button-wrapper">
+                    <button id="start-game-button" class="menu-button">Start Game</button>
+                </div>
+                <div class="menu-button-wrapper">
+                    <button id="leaderboards-button" class="menu-button">Leaderboards</button>
+                </div>
+                <div class="menu-button-wrapper">
+                    <button id="stats-button" class="menu-button">Stats</button>
+                </div>
+                <div class="menu-button-wrapper">
+                    <button id="register-button" class="menu-button">Register</button>
+                </div>
+            </div>
+            
         </div>
+        <div id="account-modal">
+            <div class="account-title-container">
+                <h1>My Account</h1>
+            </div>
+            <div class="account-info-container">
+                <h2>Username: Anon</h2>
+                <h2>Best Score: 0</h2>
+                <h2>Time Played: 0</h2>
+            </div>
+            <div class="account-modal-button-container">
+                <button class="account-modal-button">Edit
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+                <button class="account-modal-button">Close
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div id="game-over-scene">
+            <h1>You Lost!</h1><br>
+            <h2>Score: </h2>
+            <button id="play-again-button" class="menu-button red">Play Again</button>
+            <button id="return-menu-button" class="menu-button red">Back To Menu</button>
+        </div>
+    </div>
+    <canvas id="game-canvas"></canvas>
+    
+    
 </body>
-
 </html>
