@@ -87,6 +87,40 @@
             padding: 0;
             background-repeat:repeat;
         }
+        #inputo{
+            z-index:100;
+            font-size: 3rem;
+        }
+        #leaderboard-modal{
+            height: 80vh;
+            width: 50%;
+            background-color: rgba(0,0,0,.92);
+            color: white;
+            border-radius: 18px;
+            z-index: 200;
+            position:absolute;
+            display: none;
+        }
+        #leaderboard-data-container{
+            display: flex;
+            justify-content: space-around;
+            flex-direction: row;
+        }
+        .leaderboard-modal-button-container{
+                display: flex;
+                width: inherit;
+                margin: auto;
+        }
+        .leaderboard-score{
+
+        }
+        .leaderboard-title-container{
+            text-align: center;
+        }
+        #stats-button{
+            background-color: rgba(255,255,255,.5);
+            cursor: not-allowed;
+        }
         .flexy{
             display: flex;
             justify-content: center;
@@ -221,7 +255,7 @@
             outline:none;
             margin: 15px 8px 15px 8px;
         }
-        .fa-pencil, .fa-times{
+        .fa-pencil, .fa-times, .fa-floppy-o{
             margin-left: 30px;
             color: #00004d;
         }
@@ -264,6 +298,7 @@
         #sign-out-container{
             display: none;
             cursor: pointer;
+            justify-content: center;
         }
         #username-edit-container{
             justify-content: flex-start;
@@ -274,78 +309,10 @@
             margin-right: 16px;
             position: relative;
         }
-
     </style>
 </head>
 <body>
-    <div id="wrapper">
-        <div id="general-modal"></div>
-        <div id="game-start-menu">
-           <!--  <div class="center-line"></div> -->
-            <div class="title-menu-bar">
-                <div class="left-title-menu-bar">
-                    <h1 class="title">Main Menu</h1>
-                </div>
-                <div class="right-title-menu-bar">
-                    <div class="account-button-wrapper">
-                        <h3 id="my-account-button" class="account-button">
-                            <img class="google-sign-in" src="resources/images/google-assets/google_signin_buttons/web/2x/btn_google_signin_dark_normal_web@2x.png"/>
-                        </h3>
-                    </div>
-                </div>                
-            </div>
-            <div class="score-bar">
-                <h2 class="user-score">Best Score: 0</h2>
-            </div>
-            <div class="menu-button-container">
-                <div class="menu-button-wrapper">
-                    <button id="start-game-button" class="menu-button">Start Game</button>
-                </div>
-                <div class="menu-button-wrapper">
-                    <button id="leaderboards-button" class="menu-button">Leaderboards</button>
-                </div>
-                <div class="menu-button-wrapper">
-                    <button id="stats-button" class="menu-button">Stats</button>
-                </div>
-            </div>
-            
-        </div>
-        <div id="account-modal">
-            <div class="account-title-container">
-                <h1>My Account</h1>
-            </div>
-            <div class="account-info-container">
-                <div id="username-edit-container">
-                    <h2>Username: </h2>
-                    <input type="text" value="test" name="a" placeholder=""/>
-                </div>
-                <h2>Best Score: 0</h2>
-                <h2>Time Played: 0</h2>
-            </div>
-            <div class="account-modal-button-container">
-                <button id="account-edit-button" class="account-modal-button">Edit
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </button>
-                <button id="account-close-button" class="account-modal-button">Close
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div id="sign-out-container" class="flexy">
-                <p id="sign-out-button">Sign Out</p>
-            </div>
-            
-        </div>
-        <div id="game-over-scene">
-            <h1>You Lost!</h1><br>
-            <h2>Score: </h2>
-            <button id="play-again-button" class="menu-button red">Play Again</button>
-            <button id="return-menu-button" class="menu-button red">Back To Menu</button>
-        </div>
-    </div>
+    <div id="wrapper"></div>
     <canvas id="game-canvas"></canvas>
-
-    
-    
-    
 </body>
 </html>
