@@ -22,6 +22,8 @@ docReady(() => {
 //Variables that are initialized for use with the user Account
 var uid="", uName="Anon", uBestScore, uTimeSecondsPlayed=0, uTimeMinutesPlayed;
 
+var scaleFactor=1;
+
 var provider = new firebase.auth.GoogleAuthProvider();
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -72,13 +74,10 @@ stage.visible = true;
 // gameOverScene.visible = false;
 var height = window.innerHeight;
 var width = window.innerWidth;
+
 var canvas = document.getElementById("game-canvas");
 document.getElementById("game-canvas").style.height = "100vh";
 document.getElementById("game-canvas").style.width = window.innerWidth;
-var upperGameBound = height-672;
-var lowerGameBound = height-160;
-
-
 
 var renderer = PIXI.autoDetectRenderer(
     window.innerWidth,
@@ -91,6 +90,32 @@ var renderer = PIXI.autoDetectRenderer(
         "view":canvas
     }
   );
+
+var upperGameBound = height-672;
+var lowerGameBound = height-160;
+
+//Sets the speeds for all the moving layers in the game
+var forwardSpeed, backwardSpeed=-7, defaultMapSpeed, mapSpeed=1,bgSpeed=0.2,lavaSpeed=0.5;
+
+scaleFactor = (width*0.001)/2;
+
+var mapHeight, mapWidth, marioScaleFactor, logScaleFactor;
+
+if(renderer.width > 1758){
+  mapHeight = renderer.height/4;
+  mapWidth = renderer.height/4;
+  marioScaleFactor = scaleFactor;
+  logScaleFactor = scaleFactor/6;
+  forwardSpeed = (renderer.width/300)+10;
+  defaultMapSpeed=(renderer.width/300);
+}else if(renderer.width <= 1758){
+  mapHeight = renderer.height/3;
+  mapWidth = renderer.height/4;
+  marioScaleFactor = scaleFactor;
+  logScaleFactor = scaleFactor/6;
+  forwardSpeed = (renderer.width/200)+5;
+  defaultMapSpeed=(renderer.width/200);
+}
 //Initializes the variable containing the game state.
 var state;
 
@@ -106,13 +131,8 @@ var marioLastDirection,id;
 //Initialize variable to keep track of if mario is in mid-jump
 var isJumping;
 
-//Sets the speeds for all the moving layers in the game
-var forwardSpeed=15, backwardSpeed=-7, defaultMapSpeed=10,mapSpeed=1,bgSpeed=0.2,lavaSpeed=0.5;
-
 var gameStopped=true,gameHalted=false,gameScore=0;
 gameScore = getLatestScore();
-
-
 
 var logGenID=0;
 
@@ -153,10 +173,10 @@ loader.add('resources/images/shittymariomap.json')
 
     mario = new PIXI.Sprite(id["mario-right-1.png"]);
     marioLastDirection = "right";
-    mario.x = stage.width / 2;
-    mario.y = stage.height / 2;
-    
-    
+    mario.x = renderer.width / 3;
+    mario.y = mapHeight;
+    mario.scale.x = marioScaleFactor;
+    mario.scale.y = marioScaleFactor;
     setup();
     
 }); //End of loader
@@ -164,8 +184,8 @@ loader.add('resources/images/shittymariomap.json')
 //Starts the game and loads all necessary game functions
 function setup() {
   //Create the `mario` sprite
-  mario.x = 1000; //sets mario's x-axis
-  mario.y = 750; //sets mario's y-axis
+  // mario.x = 1000; //sets mario's x-axis
+  // mario.y = 750; //sets mario's y-axis
   mario.hitArea = new PIXI.Rectangle(0, 0, 120, 29); //x,y,width,height
   mario.vx = 0; //sets mario's x-axis velocity 
   mario.vy = 0; //sets mario's y-axis velocity
@@ -186,6 +206,7 @@ function setup() {
 
 function initGameObjects(){
     //Creates the far background
+    console.log("Renderer height and width: "+renderer.height+ " "+renderer.width);
     var farTexture = PIXI.Texture.fromImage("resources/images/background-hills.gif");
     farBg = new PIXI.extras.TilingSprite(farTexture, renderer.width, renderer.height);
     farBg.position.x = 0;
@@ -199,7 +220,8 @@ function initGameObjects(){
     var midTexture = PIXI.Texture.fromImage("resources/images/grass00.png");
     midBg = new PIXI.extras.TilingSprite(midTexture, renderer.width, renderer.height);
     midBg.position.x = 0;
-    midBg.position.y = 500;
+    //midBg.position.y = 500;
+    midBg.position.y = mapHeight;
     midBg.tilePosition.x = 0;
     midBg.tilePosition.y = 0;
     stage.addChild(midBg);
@@ -207,12 +229,13 @@ function initGameObjects(){
     //Creates the lava background
     //Lava gotten from https://wakaflockaflame1.deviantart.com/art/SRE-Design-Texture-test-Lava-Floor-test-1-437362294
     var lavaTexture = PIXI.Texture.fromImage("resources/images/lava1.png");
-    lavaBg = new PIXI.extras.TilingSprite(lavaTexture, 120, renderer.height);
+    lavaBg = new PIXI.extras.TilingSprite(lavaTexture, (renderer.width/10), renderer.height);
     lavaBg.position.x = 0;
-    lavaBg.position.y = 500;
+    //lavaBg.position.y = 500;
+    lavaBg.position.y = mapHeight;
     lavaBg.tilePosition.x = 0;
     lavaBg.tilePosition.y = 0;
-    lavaBg.hitArea = new PIXI.Rectangle(60, 0, 120, 512);
+    lavaBg.hitArea = new PIXI.Rectangle(60, 0, (renderer.width/10), 512);
     lavaBg.interactive = true;
     stage.addChild(lavaBg);
 
@@ -220,12 +243,18 @@ function initGameObjects(){
     richText = new PIXI.Text('Shitty Mario!', style);
     richText.x = 125;
     richText.y = 0;
+    richText.scale.x = scaleFactor;
+    richText.scale.y = scaleFactor;
+    richText.position.x = scaleFactor;
     stage.addChild(richText);
 
     //Create and add text to the stage
     richTextScore = new PIXI.Text('Score: 0', style);
     richTextScore.x = 700;
     richTextScore.y = 0;
+    richTextScore.scale.x = scaleFactor;
+    richTextScore.scale.y = scaleFactor;
+    richTextScore.position.x = scaleFactor+width/2;
     stage.addChild(richTextScore);
 
     // var graphics = new PIXI.Graphics();
@@ -633,6 +662,7 @@ function setKeyboardControlsListeners(){
 //but where it is possible that mario can make it through every jump.
 
 function generateLogs(){
+    var first=true;
     logGenID = setInterval(function() {
         //TODO: create 50% chance that a log will appear every 500 ms. The
         //      log will appear at the edge of the map, and will be pushed
@@ -657,9 +687,13 @@ function generateLogs(){
             logOfObstacles[newLogId].y = randomIntFromInterval(450,750);
             logOfObstacles[newLogId].height = 300;
             logOfObstacles[newLogId].width = 134;
-            logOfObstacles[newLogId].hitArea = new PIXI.Rectangle(0, 0, 72, 300);
+            logOfObstacles[newLogId].hitArea = new PIXI.Rectangle(0, 0, 72/scaleFactor, 300);
+            logOfObstacles[newLogId].scale.x = scaleFactor/6;
+            logOfObstacles[newLogId].scale.y = scaleFactor/6;
             logOfObstacles[newLogId].interactive = true;
-            addObjectToBackground(logOfObstacles[newLogId], newLogId);
+            if(!first) addObjectToBackground(logOfObstacles[newLogId], newLogId);
+            else{first=false;}
+            
         }
     },500);
 }
@@ -1021,5 +1055,26 @@ function getLatestScore(){
     else{return 0;}
   }
 }
+
+//Function that re-adjusts all of the elements in the game when the window is resized
+window.onresize = function(event){
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  //this part resizes the canvas but keeps ratio the same
+  renderer.view.style.width = w + "px";
+  renderer.view.style.height = h + "px";
+  //this part adjusts the ratio:
+  renderer.resize(w,h);
+
+  scaleFactor = w*0.001;
+  richText.position.x = scaleFactor;
+  richTextScore.position.x = scaleFactor+w/2;
+  mario.scale.x = scaleFactor/2;
+  mario.scale.y = scaleFactor/2;
+  richText.scale.x = scaleFactor;
+  richText.scale.y = scaleFactor;
+  richTextScore.scale.x = scaleFactor;
+  richTextScore.scale.y = scaleFactor;
+};
 }); //End of docReady function
 
